@@ -1,0 +1,52 @@
+---
+- name: Download stable version
+  shell: 'curl -LO "https://dl.k8s.io/release/$(curl -L -s https://dl.k8s.io/release/stable.txt)/bin/linux/amd64/kubectl"'
+  args:
+    chdir: /tmp
+
+- name: Make kubectl executable
+  file:
+    path: /tmp/kubectl
+    mode: "+x"
+
+- name: Move kubectl to /usr/local/bin/
+  command: "mv /tmp/kubectl /usr/local/bin/kubectl"
+
+- name: Check if source file exists
+  stat:
+    path: "/root/.kube/config"
+  register: kube_config_stat
+  ignore_errors: true
+
+- name: Create destination directory if not present
+  file:
+    path: "/var/lib/jenkins/.kube/"
+    state: directory
+    owner: jenkins
+    group: jenkins
+    mode: "0755"
+  when: kube_config_stat.stat.exists
+
+- name: Copy config file
+  copy:
+    src: "/root/.kube/config"
+    dest: "/var/lib/jenkins/.kube/config"
+    remote_src: yes
+    owner: jenkins
+    group: jenkins
+    mode: "0644"
+  when: kube_config_stat.stat.exists
+
+# - name: Fetch file and set permissions
+#   fetch:
+#     src: "/root/.kube/config"
+#     dest: "/tmp/config"
+#     flat: yes
+#     validate_checksum: yes
+#   when: kube_config_stat.stat.exists
+
+# - name: Copy config file
+#   copy:
+#     src: "/tmp/config"
+#     dest: "/var/lib/jenkins/.kube/config"
+#   when: kube_config_stat.stat.exists
