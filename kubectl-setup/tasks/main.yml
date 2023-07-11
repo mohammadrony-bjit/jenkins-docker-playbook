@@ -14,7 +14,8 @@
 
 - name: Check if source file exists
   stat:
-    path: "/root/.kube/config"
+    path: "/tmp/kubeconfig"
+  delegate_to: localhost
   register: kube_config_stat
   ignore_errors: true
 
@@ -29,7 +30,7 @@
 
 - name: Copy config file
   copy:
-    src: "/root/.kube/config"
+    src: "/tmp/kubeconfig"
     dest: "/var/lib/jenkins/.kube/config"
     remote_src: yes
     owner: jenkins
@@ -40,13 +41,13 @@
 # - name: Fetch file and set permissions
 #   fetch:
 #     src: "/root/.kube/config"
-#     dest: "/tmp/config"
+#     dest: "/tmp/kubeconfig"
 #     flat: yes
 #     validate_checksum: yes
 #   when: kube_config_stat.stat.exists
 
 # - name: Copy config file
 #   copy:
-#     src: "/tmp/config"
+#     src: "/tmp/kubeconfig"
 #     dest: "/var/lib/jenkins/.kube/config"
 #   when: kube_config_stat.stat.exists
