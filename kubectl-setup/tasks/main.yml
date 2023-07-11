@@ -19,7 +19,7 @@
   register: kube_config_stat
   ignore_errors: true
 
-- name: Create destination directory if not present
+- name: Create destination directory
   file:
     path: "/var/lib/jenkins/.kube/"
     state: directory
@@ -36,6 +36,7 @@
     owner: jenkins
     group: jenkins
     mode: "0644"
+  become_user: root
   when: kube_config_stat.stat.exists
 
 # - name: Fetch file and set permissions
