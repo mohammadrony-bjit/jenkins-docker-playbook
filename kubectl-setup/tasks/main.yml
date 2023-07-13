@@ -32,23 +32,8 @@
   copy:
     src: "/tmp/kubeconfig"
     dest: "/var/lib/jenkins/.kube/config"
-    remote_src: yes
     owner: jenkins
     group: jenkins
     mode: "0644"
   become_user: root
   when: kube_config_stat.stat.exists
-
-# - name: Fetch file and set permissions
-#   fetch:
-#     src: "/root/.kube/config"
-#     dest: "/tmp/kubeconfig"
-#     flat: yes
-#     validate_checksum: yes
-#   when: kube_config_stat.stat.exists
-
-# - name: Copy config file
-#   copy:
-#     src: "/tmp/kubeconfig"
-#     dest: "/var/lib/jenkins/.kube/config"
-#   when: kube_config_stat.stat.exists
