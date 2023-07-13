@@ -52,4 +52,5 @@
 - name: Start Jenkins
   systemd:
     name: jenkins
+    enabled: true
     state: started
