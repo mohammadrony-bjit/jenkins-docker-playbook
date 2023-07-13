@@ -15,6 +15,15 @@
     state: stopped
     enabled: false
 
+# - name: Install basic packages
+#   dnf:
+#     name:
+#       - wget
+#       - vim
+#       - git
+#     state: present
+#     update_cache: true
+
 - name: Download Long Term Jenkins release
   get_url:
     url: https://pkg.jenkins.io/redhat-stable/jenkins.repo
