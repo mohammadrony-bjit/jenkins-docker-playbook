@@ -8,21 +8,44 @@
   yum:
     name: firewalld
     state: present
-    
+
 - name: disable firewall service for labs
   service:
     name: firewalld
     state: stopped
     enabled: false
 
-# - name: Install basic packages
-#   dnf:
-#     name:
-#       - wget
-#       - vim
-#       - git
-#     state: present
-#     update_cache: true
+- name: Enable Root Login
+  lineinfile:
+    dest: /etc/ssh/sshd_config
+    regexp: "^PermitRootLogin"
+    line: "PermitRootLogin yes"
+    state: present
+    backup: yes
+  become_user: root
+  notify:
+    - Restart SSH
+
+- name: Install basic packages
+  dnf:
+    name:
+      - wget
+      - vim
+      - git
+    state: present
+    update_cache: true
+
+- name: Install Java
+  dnf:
+    name:
+      - java-11-openjdk
+      - java-11-openjdk-devel
+    state: present
+
+- name: Install Maven
+  dnf:
+    name: maven
+    state: present
 
 - name: Download Long Term Jenkins release
   get_url:
@@ -36,18 +59,8 @@
 
 - name: DNF update
   dnf:
-    name: '*'
+    name: "*"
     state: latest
-
-- name: Install Java
-  dnf:
-    name: java-11-openjdk-devel
-    state: present
-  
-- name: Install Maven
-  dnf:
-    name: maven
-    state: present
 
 - name: Install Jenkins
   dnf:
@@ -63,3 +76,9 @@
     name: jenkins
     enabled: true
     state: started
+
+- name: Fetch initial admin token
+  fetch:
+    src: "{{ admin_token_file }}"
+    dest: /home/ansible/jenkins-admintoken.txt
+    flat: yes

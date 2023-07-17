@@ -1,2 +1,2 @@
 ---
-# vars file for jenkins-setup
+admin_token_file: /var/lib/jenkins/secrets/initialAdminPassword
