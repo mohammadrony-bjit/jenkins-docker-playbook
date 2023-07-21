@@ -72,6 +72,9 @@
     name: jenkins
     enabled: true
     state: started
+  async: 200
+  poll: 20
+  become_user: root
 
 - name: Fetch initial admin token
   fetch:
