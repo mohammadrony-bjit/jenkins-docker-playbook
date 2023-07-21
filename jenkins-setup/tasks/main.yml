@@ -73,6 +73,7 @@
     enabled: true
     state: started
   ignore_errors: true
+  
 - name: Fetch initial admin token
   fetch:
     src: "{{ admin_token_file }}"
