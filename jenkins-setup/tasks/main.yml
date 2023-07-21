@@ -8,7 +8,7 @@
   yum:
     name: firewalld
     state: present
-
+    
 - name: disable firewall service for labs
   service:
     name: firewalld
@@ -24,7 +24,7 @@
     backup: yes
   become_user: root
   notify:
-    - Restart SSH
+  - Restart SSH
 
 - name: Install basic packages
   dnf:
@@ -72,10 +72,7 @@
     name: jenkins
     enabled: true
     state: started
-  async: 200
-  poll: 20
-  become_user: root
-
+  ignore_errors: true
 - name: Fetch initial admin token
   fetch:
     src: "{{ admin_token_file }}"
